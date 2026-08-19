@@ -1,0 +1,7 @@
+node_modules
+dist
+.cmdr/artifacts
+.cmdr/downloads
+.cmdr/profiles
+.cmdr/tmp
+.DS_Store

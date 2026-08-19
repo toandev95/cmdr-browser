@@ -1,0 +1,45 @@
+{
+  "name": "cmdr-browser",
+  "version": "0.1.0",
+  "description": "A CLI-first MCP browser agent with extensible skills.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "cmdr": "dist/src/cli.js",
+    "cmdr-browser": "dist/src/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toandev95/cmdr-browser.git"
+  },
+  "files": [
+    "dist/src",
+    "!dist/src/**/*.test.js",
+    "!dist/src/**/*.spec.js",
+    "skills",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "mcp": "node dist/src/cli.js mcp",
+    "prepare": "npm run build",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.0.0",
+    "commander": "^14.0.0",
+    "playwright": "^1.61.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}
