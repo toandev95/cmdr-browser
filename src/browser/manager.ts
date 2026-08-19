@@ -126,6 +126,35 @@ export class BrowserManager {
     return this.page;
   }
 
+  async newTab(url?: string): Promise<Page> {
+    if (!this.context) throw new Error("Browser is not started. Call browser_start first.");
+    const page = await this.context.newPage();
+    const downloadsDirectory = resolveRuntimePath(".cmdr/downloads");
+    this.trackDownloads(page, downloadsDirectory);
+    if (url) await page.goto(url, { waitUntil: "domcontentloaded" });
+    this.page = page;
+    return page;
+  }
+
+  async selectTab(index: number): Promise<void> {
+    if (!this.context) throw new Error("Browser is not started. Call browser_start first.");
+    const pages = this.context.pages();
+    if (index < 0 || index >= pages.length) throw new Error(`Tab index out of range: ${index}`);
+    this.page = pages[index];
+    await this.page.bringToFront();
+  }
+
+  async closeTab(index: number): Promise<void> {
+    if (!this.context) throw new Error("Browser is not started. Call browser_start first.");
+    const pages = this.context.pages();
+    if (index < 0 || index >= pages.length) throw new Error(`Tab index out of range: ${index}`);
+    const closing = pages[index];
+    const wasActive = closing === this.page;
+    await closing.close();
+    if (wasActive) this.page = this.context.pages()[0];
+    if (!this.page && this.context.pages().length === 0) this.page = await this.context.newPage();
+  }
+
   async close(): Promise<void> {
     await Promise.allSettled(this.pendingDownloads);
     await this.context?.close();
