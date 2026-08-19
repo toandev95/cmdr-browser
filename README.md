@@ -1,32 +1,34 @@
 # Cmdr Browser
 
-Cmdr Browser is a cross-platform MCP server that lets Claude Desktop, ChatGPT Desktop, and other MCP clients control a persistent Chromium browser through Playwright.
+Cmdr Browser is an MCP server for Claude and Codex (macOS / Windows) that controls an isolated Chromium browser through Playwright.
 
-It is distributed as an npm package and communicates over MCP stdio. It does not require a web server, a local port, or editor-specific configuration.
+It is distributed from GitHub via `npx --yes github:toandev95/cmdr-browser` and communicates over MCP stdio. It does not require a web server or a local port.
 
 ## Requirements
 
 - Node.js 20 or newer
-- Google Chrome
-- An MCP-compatible desktop client
+- Google Chrome (stable channel)
+- Claude Desktop/Codex on macOS or Windows
 
 ## Install
 
 One command to install skills (primary) and wire the browser MCP (supplementary):
 
 ```bash
-# global: works for Claude Desktop + Claude Code
-npx --yes cmdr-browser install --with-mcp
+# from GitHub (recommended)
+npx --yes github:toandev95/cmdr-browser install --global --with-mcp
+npx --yes github:toandev95/cmdr-browser install --project --with-mcp
 
-# project-scoped (writes .claude/skills + .mcp.json for the project)
-npx --yes cmdr-browser install --project --with-mcp
+# local dev (inside this repo)
+npx --yes . install --global --with-mcp
+npx --yes . install --project --with-mcp
 ```
 
-Restart the desktop client after install, then try a slash command like `/ab-testing` and the MCP tool `browser_start`.
+Restart Claude / Codex after install, then try a slash command like `/ab-testing` and the MCP tool `browser_start`.
 
 ## Configure A Desktop Client
 
-Add an MCP server entry to the client's JSON configuration. The exact configuration file location depends on the client and operating system. The server entry itself is portable across Claude Desktop, ChatGPT Desktop, and other MCP clients.
+Add an MCP server entry to the client's JSON configuration. The exact configuration file location depends on the client and operating system. The server entry itself is portable across Claude and Codex — the installer writes it for you, including dual Claude paths (`Claude` + `Claude-3p`) and Codex `~/.codex/config.toml`.
 
 For a global npm install:
 
@@ -41,14 +43,14 @@ For a global npm install:
 }
 ```
 
-For a zero-install configuration:
+For a zero-install configuration (GitHub source):
 
 ```json
 {
     "mcpServers": {
         "cmdr-browser": {
             "command": "npx",
-            "args": ["--yes", "cmdr-browser", "mcp"]
+            "args": ["--yes", "github:toandev95/cmdr-browser", "mcp"]
         }
     }
 }

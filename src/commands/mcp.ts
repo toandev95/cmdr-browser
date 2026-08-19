@@ -97,9 +97,14 @@ export async function installMcp(
       content = "";
     }
     const entry = `[mcp_servers.cmdr-browser]\ncommand = "npx"\nargs = ["--yes", "github:toandev95/cmdr-browser", "mcp"]\n`;
-    if (content.includes("[mcp_servers.cmdr-browser]"))
-      content = content.replace(/\[mcp_servers\.cmdr-browser\][^\[]*/s, entry);
-    else {
+    if (content.includes("[mcp_servers.cmdr-browser]")) {
+      const header = "[mcp_servers.cmdr-browser]";
+      const start = content.indexOf(header);
+      const after = content.slice(start + header.length);
+      const next = after.search(/\n\[/);
+      if (next === -1) content = content.slice(0, start) + entry;
+      else content = content.slice(0, start) + entry + after.slice(next + 1);
+    } else {
       if (content && !content.endsWith("\n")) content += "\n";
       content += entry;
     }
